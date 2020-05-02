@@ -25,9 +25,7 @@ public class GameController {
     public String move(@PathVariable Long id, @RequestBody Move move) {
         Game game = gameMap.get(id);
         if (game == null) throw new GameDoesNotExist();
-        if (game.flag) {
-            throw new GameOverException();
-        }
+        if (game.flag) throw new GameOverException();
         game.makeMove(move);
         game.computerMove();
         return game.board();

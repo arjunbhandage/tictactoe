@@ -9,9 +9,10 @@ import com.oss.nokia.neo.exceptions.InvalidMoveException;
 
 public class Game {
 
-    Random rand = new Random();
-    boolean flag;
-    String result = "Match Ongoing!";
+    private static final String MATCH_ENDED_IN_DRAW = "Match ended in Draw!";
+    private Random rand = new Random();
+    protected boolean flag;
+    private String result = "Match Ongoing!";
     private String name;
     private Character compChar = 'o';
     private Character character;
@@ -29,7 +30,7 @@ public class Game {
         return compChar;
     }
 
-    public void setComputerCharacter(Character compChar) {
+    protected void setComputerCharacter(Character compChar) {
         this.compChar = compChar;
     }
 
@@ -56,7 +57,25 @@ public class Game {
         if (checkResult(1)) {
             flag = true;
             result = "Player won!";
+            return;
         }
+        List<Index> availableMoves = getAvailableMoves();
+        if (availableMoves.isEmpty()) {
+            flag = true;
+            result = MATCH_ENDED_IN_DRAW;
+        }
+    }
+
+    private List<Index> getAvailableMoves() {
+        List<Index> availableMoves = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (array[i][j] == 0) {
+                    availableMoves.add(new Index(i, j));
+                }
+            }
+        }
+        return availableMoves;
     }
 
     private int getInt(Character character) {
@@ -87,17 +106,10 @@ public class Game {
     }
 
     public void computerMove() {
-        List<Index> availableMoves = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (array[i][j] == 0) {
-                    availableMoves.add(new Index(i, j));
-                }
-            }
-        }
+        List<Index> availableMoves = getAvailableMoves();
         if (availableMoves.isEmpty()) {
             flag = true;
-            result = "Match ended in Draw!";
+            result = MATCH_ENDED_IN_DRAW;
             return;
         }
         int randInt = rand.nextInt(availableMoves.size());
@@ -106,6 +118,9 @@ public class Game {
         if (checkResult(-1)) {
             flag = true;
             result = "Computer won the match!";
+        } else if (availableMoves.size()==1) {
+            flag = true;
+            result = MATCH_ENDED_IN_DRAW;
         }
     }
 
