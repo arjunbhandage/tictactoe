@@ -7,7 +7,7 @@ Execute the below commands to run in docker
 'docker build -t neo .'
 'docker run -p 8080:8080 neo'
 
-The application will start running on http://localhost: :
+The application will start running on http://localhost:8080
 Following are the APIs
 
 1.To create a game:
